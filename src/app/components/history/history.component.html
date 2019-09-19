@@ -1,0 +1,6 @@
+<div>{{ data.status }}</div>
+<ol>
+  <li *ngFor="let move of data.moves">
+    <a href (click)="onClick(move)">{{ getMoveDescription(move) }}</a>
+  </li>
+</ol>

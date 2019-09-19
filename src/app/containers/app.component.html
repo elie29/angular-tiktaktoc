@@ -1,0 +1,6 @@
+<h1>Tik Tak Toc</h1>
+
+<div *ngIf="state$ | async as state">
+  <app-board [squares]="getSquares(state)" (clicked)="move($event)"></app-board>
+  <app-history [data]="getData(state)" (clicked)="jumpTo($event)"></app-history>
+</div>

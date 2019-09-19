@@ -1,0 +1,9 @@
+<table>
+  <tbody>
+    <tr *ngFor="let y of [0, 1, 2]">
+      <td *ngFor="let x of [0, 1, 2]" (click)="onClick(x * 3 + y)">
+        {{ squares[x * 3 + y] }}
+      </td>
+    </tr>
+  </tbody>
+</table>
