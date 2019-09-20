@@ -11,11 +11,15 @@ export interface MovesList {
   status: string;
 }
 
+export const MAX_STEPS = 9;
+
 export const defaultState: State = {
-  history: [Array(9).fill(null)],
+  history: [Array(MAX_STEPS).fill(null)],
   stepIndex: 0,
   xIsNext: true
 };
+
+export const player = (xIsNext: boolean): Square => (xIsNext ? 'X' : 'O');
 
 export const LINES = [
   [0, 1, 2],
@@ -27,3 +31,5 @@ export const LINES = [
   [0, 4, 8],
   [2, 4, 6]
 ];
+
+export const MAX_LINES = LINES.length;

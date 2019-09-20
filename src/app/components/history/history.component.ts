@@ -18,10 +18,7 @@ export class HistoryComponent {
   @Output() clicked = new EventEmitter<number>();
 
   getMoveDescription(move: number): string {
-    if (move) {
-      return 'Move #' + move;
-    }
-    return 'Game start';
+    return move ? `Move #${move}` : 'Game start';
   }
 
   onClick(move: number): false {

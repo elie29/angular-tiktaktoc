@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { tap } from 'rxjs/operators';
 
 import { Board } from '../services/board';
-import { MovesList, Square, State } from '../services/utils';
+import { MovesList, Square } from '../services/utils';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +10,14 @@ import { MovesList, Square, State } from '../services/utils';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  state$ = this.board.state$;
+  squares: Square[];
+  data: MovesList;
+  state$ = this.board.state$.pipe(
+    tap(({ history, stepIndex }) => (this.squares = history[stepIndex])),
+    tap(({ history }) => this.setData(history))
+  );
 
-  constructor(protected board: Board) {}
+  constructor(private board: Board) {}
 
   move(cell: number): void {
     this.board.move(cell);
@@ -21,14 +27,10 @@ export class AppComponent {
     this.board.jumpTo(move);
   }
 
-  getSquares(state: State): Square[] {
-    return state.history[state.stepIndex];
-  }
-
-  getData(state: State): MovesList {
-    return {
-      moves: [...state.history.keys()],
-      status: this.board.getStatus(this.getSquares(state))
+  private setData(history: Square[][]): void {
+    this.data = {
+      moves: [...history.keys()],
+      status: this.board.getStatus(this.squares)
     };
   }
 }

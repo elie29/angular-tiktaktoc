@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { defaultState, LINES, Square, State } from './utils';
+import {
+  defaultState,
+  LINES,
+  MAX_LINES,
+  MAX_STEPS,
+  player,
+  Square,
+  State
+} from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +36,7 @@ export class Board {
       return;
     }
 
-    squares[step] = value.xIsNext ? 'X' : 'O';
+    squares[step] = player(value.xIsNext);
 
     this.next({
       history: [...history, squares],
@@ -41,12 +49,12 @@ export class Board {
     this.next({
       ...this.value,
       stepIndex: step,
-      xIsNext: step % 2 ? false : true
+      xIsNext: step % 2 === 0
     });
   }
 
   calculateWinner(squares: Square[]): Square {
-    for (let i = 0; i < LINES.length; i += 1) {
+    for (let i = 0; i < MAX_LINES; i += 1) {
       const [a, b, c] = LINES[i];
       if (
         squares[a] &&
@@ -63,13 +71,13 @@ export class Board {
     const winner = this.calculateWinner(squares);
 
     if (winner) {
-      return 'Winner: ' + winner;
+      return `Winner: ${winner}`;
     }
 
-    if (this.value.stepIndex === 9) {
+    if (this.value.stepIndex === MAX_STEPS) {
       return 'No Winner';
     }
 
-    return 'Next player: ' + (this.value.xIsNext ? 'X' : 'O');
+    return `Next player: ${player(this.value.xIsNext)}`;
   }
 }
