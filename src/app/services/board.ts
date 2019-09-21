@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { Assertion } from './assertion';
 import {
   defaultState,
   LINES,
@@ -23,11 +24,9 @@ export class Board {
     return this.actionState.value;
   }
 
-  private next(state: State) {
-    this.actionState.next(state);
-  }
-
   move(step: number): void {
+    Assertion.between(step, 0, MAX_STEPS);
+
     const value = this.value;
     const history = value.history.slice(0, value.stepIndex + 1);
     const squares = [...history[value.stepIndex]];
@@ -38,7 +37,7 @@ export class Board {
 
     squares[step] = player(value.xIsNext);
 
-    this.next({
+    this.actionState.next({
       history: [...history, squares],
       stepIndex: history.length,
       xIsNext: !value.xIsNext
@@ -46,7 +45,9 @@ export class Board {
   }
 
   jumpTo(step: number): void {
-    this.next({
+    Assertion.between(step, 0, MAX_STEPS);
+
+    this.actionState.next({
       ...this.value,
       stepIndex: step,
       xIsNext: step % 2 === 0
